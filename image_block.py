@@ -10,6 +10,12 @@ import matplotlib.pyplot as plt
 def gray(image):
     return cv.cvtColor(image, cv.COLOR_BGR2GRAY)
 
+def yuv(image):
+    return cv.cvtColor(image, cv.COLOR_BGR2YUV)
+
+def bgr(image):
+    return cv.cvtColor(image, cv.COLOR_YUV2BGR)
+
 def __raskladka(image):
     result =[[],[],[]]
     for i in image[:,:,0]:
@@ -59,6 +65,8 @@ def remaster(image, levels_red, levels_green=None, levels_blue=None):
                     break
     return image
             
+def remaster_yuv(image, levels_brightness):
+    pass
 
 def show_result(img, title="Display window"):
     cv.imshow(title, img)
@@ -67,7 +75,18 @@ def show_result(img, title="Display window"):
 
 
 def filter(gray_image, filter_matrix) -> list:
-     return cv.filter2D(gray_image, ddepth=-1, kernel=filter_matrix)
+    return cv.filter2D(gray_image, ddepth=-1, kernel=filter_matrix)
 
+def filter_yuv(image, filter_matrix):
+    image[:,:,1] = cv.filter2D(image[:,:,1], ddepth=-1, kernel=filter_matrix)
+    image[:,:,2] = cv.filter2D(image[:,:,2], ddepth=-1, kernel=filter_matrix)
+    
+    return image
+    
 
+def brightness(image, k):
+    image[:,:,0]=image[:,:,0]*k
+    image[:,:,1]=image[:,:,1]*k
+    image[:,:,2]=image[:,:,2]*k 
+    return image
     
