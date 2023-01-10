@@ -65,8 +65,28 @@ def remaster(image, levels_red, levels_green=None, levels_blue=None):
                     break
     return image
             
-def remaster_yuv(image, levels_brightness):
-    pass
+def remaster_yuv_brightness(image, levels_brightness):
+    for i in image:
+        for j in i:
+            for k in reversed(levels_brightness):
+                if j[0] > k: 
+                    j[0] = k
+                    break
+                
+    return image
+
+def remaster_yuv_(image:list ,levels: list[int]):
+    for i in image:
+        for j in i:
+            for k in reversed(levels):
+                if j[1] > k: 
+                    j[1] = k
+                    break
+            for l in reversed(levels):
+                if j[2] > l: 
+                    j[2] = l
+                    break
+    return image
 
 def show_result(img, title="Display window"):
     cv.imshow(title, img)
@@ -82,11 +102,28 @@ def filter_yuv(image, filter_matrix):
     image[:,:,2] = cv.filter2D(image[:,:,2], ddepth=-1, kernel=filter_matrix)
     
     return image
-    
+
+def filter_levels(image:list[list[int]], filter_matrix:list[list[float]], levels:dict[int:bool]):
+    for k,v in levels.items():
+        if (k < 0) or (k>2):
+            print("Invalid level of image. Example : levels=dict[0:False, 1:True, 2:True]/ Недопустимое значение для слоя изображения. Пример: levels=dict[0:False, 1:True, 2:True]")
+        if v:
+            image[:,:,k] = cv.filter2D(image[:,:,k], ddepth=-1, kernel=filter_matrix)
+    return image
 
 def brightness(image, k):
     image[:,:,0]=image[:,:,0]*k
     image[:,:,1]=image[:,:,1]*k
     image[:,:,2]=image[:,:,2]*k 
     return image
+
+def countur(image:list[list]):
+    pass
+
+def level2bool(image, epsilon):
     
+    image = np.array(image)
+    result = np.zeros_like(image[:,:,0])
+    image.astype(np.bool_)
+    result = result + image.astype(np.bool_)[:,:,0] + image.astype(np.bool_)[:,:,1] +image.astype(np.bool_)[:,:,2]
+    return result
