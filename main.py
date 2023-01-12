@@ -22,5 +22,5 @@ image_countur = level2bool(image=image_countur, epsilon=20)
 show_info(image_1)
 show_result(bgr(image_1))
 print(np.shape(image_countur))
-print(image_countur[0,:])
+
 show_result(image_countur*255)
